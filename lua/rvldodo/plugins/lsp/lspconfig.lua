@@ -148,7 +148,16 @@ return {
          --       filetypes = { "proto" },
          --       root_dir = lspconfig.util.root_pattern("buf.yaml", ".git"),
          --    })
-         -- end,
+         ["ts_ls"] = function()
+            lspconfig["ts_ls"].setup({
+               capabilities = capabilities,
+               on_attach = function(client, bufnr)
+                  -- Avoid formatting conflicts with other formatters
+                  client.server_capabilities.documentFormattingProvider = false
+               end,
+               filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" }, -- Add relevant filetypes
+            })
+         end, -- end,
       })
    end,
 }
