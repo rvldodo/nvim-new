@@ -158,6 +158,20 @@ return {
                filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" }, -- Add relevant filetypes
             })
          end, -- end,
+         -- ["rust-analyzer"] = function()
+         --    lspconfig["rust-analyzer"].setup({
+         --       capabilities = capabilities,
+         --       filetypes = { "rust" },
+         --       root_dir = lspconfig.root_pattern("Cargo.toml"),
+         --       settings = {
+         --          ["rust-analyzer"] = {
+         --             cargo = {
+         --                allFeatures = true,
+         --             },
+         --          },
+         --       },
+         --    })
+         -- end,
       })
    end,
 }
