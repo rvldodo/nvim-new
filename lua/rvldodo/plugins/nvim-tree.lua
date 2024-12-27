@@ -43,6 +43,38 @@ return {
             enable = false,
          },
 
+         -- icons = {
+         --    show = {
+         --       file = true,
+         --       folder = true,
+         --       folder_arrow = true,
+         --       git = true,
+         --    },
+         --
+         --    glyphs = {
+         --       default = "󰈚",
+         --       symlink = "",
+         --       folder = {
+         --          default = "",
+         --          empty = "",
+         --          empty_open = "",
+         --          open = "",
+         --          symlink = "",
+         --          symlink_open = "",
+         --          arrow_open = "",
+         --          arrow_closed = "",
+         --       },
+         --       git = {
+         --          unstaged = "✗",
+         --          staged = "✓",
+         --          unmerged = "",
+         --          renamed = "➜",
+         --          untracked = "★",
+         --          deleted = "",
+         --          ignored = "◌",
+         --       },
+         --    },
+         -- },
          icons = {
             show = {
                file = true,
@@ -50,40 +82,49 @@ return {
                folder_arrow = true,
                git = true,
             },
-
             glyphs = {
-               default = "󰈚",
-               symlink = "",
+               default = "󰈚", -- Default file
+               symlink = "", -- Symlink file
                folder = {
-                  default = "",
-                  empty = "",
-                  empty_open = "",
-                  open = "",
-                  symlink = "",
-                  symlink_open = "",
-                  arrow_open = "",
-                  arrow_closed = "",
+                  default = "", -- Closed folder
+                  open = "", -- Open folder
+                  empty = "", -- Empty closed folder
+                  empty_open = "", -- Empty open folder
+                  symlink = "", -- Symlink folder
+                  symlink_open = "", -- Symlink folder open
+                  arrow_open = "", -- Arrow indicating open
+                  arrow_closed = "", -- Arrow indicating closed
                },
                git = {
-                  unstaged = "✗",
-                  staged = "✓",
-                  unmerged = "",
-                  renamed = "➜",
-                  untracked = "★",
-                  deleted = "",
-                  ignored = "◌",
+                  unstaged = "", -- Unstaged changes
+                  staged = "✓", -- Staged changes
+                  unmerged = "", -- Merge conflict
+                  renamed = "➜", -- Renamed file
+                  untracked = "★", -- Untracked files
+                  deleted = "", -- Deleted files
+                  ignored = "◌", -- Ignored files
                },
             },
          },
       },
+      -- diagnostics = {
+      --    enable = true,
+      --    show_on_dirs = true,
+      --    icons = {
+      --       hint = "",
+      --       info = "",
+      --       warning = "",
+      --       error = "",
+      --    },
+      -- },
       diagnostics = {
          enable = true,
          show_on_dirs = true,
          icons = {
-            hint = "",
-            info = "",
-            warning = "",
-            error = "",
+            hint = "󰌵", -- Hint icon
+            info = "󰙎", -- Info icon
+            warning = "", -- Warning icon
+            error = "", -- Error icon
          },
       },
    },
