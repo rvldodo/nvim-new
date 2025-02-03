@@ -189,6 +189,11 @@ return {
          --       },
          --    })
          -- end,
+         ["biome"] = function()
+            lspconfig["biome"].setup({
+               capabilities = capabilities,
+            })
+         end,
       })
    end,
 }

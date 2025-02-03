@@ -1,5 +1,11 @@
 return {
-   "echasnovski/mini.hipatterns",
+   -- "echasnovski/mini.hipatterns",
+   -- event = "BufReadPre",
+   -- opts = {},
+
+   "norcalli/nvim-colorizer.lua",
    event = "BufReadPre",
-   opts = {},
+   config = function()
+      require("colorizer").setup() -- Default setup
+   end,
 }

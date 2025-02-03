@@ -180,6 +180,11 @@ return {
       keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find string under cursor in cwd" })
       keymap.set("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Find todos" })
       keymap.set("n", "<leader>fb", ":Telescope file_browser<cr>", { desc = "Find file browser" })
+      keymap.set("n", "<leader>fr", function()
+         require("telescope.builtin").grep_string({
+            search = vim.fn.input("Find: "),
+         })
+      end, { desc = "Find and replace in cwd" })
    end,
 }
 
