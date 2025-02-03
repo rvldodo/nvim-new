@@ -223,6 +223,13 @@ return {
          desc = "Toggle Terminal",
       },
       {
+         "<leader>st",
+         function()
+            Snacks.terminal({ split = "horizontal" })
+         end,
+         desc = "Split Terminal (Horizontal)",
+      },
+      {
          "<C-_>",
          function()
             Snacks.terminal()

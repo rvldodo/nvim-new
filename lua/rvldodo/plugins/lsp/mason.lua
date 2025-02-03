@@ -45,6 +45,7 @@ return {
 
       mason_tool_installer.setup({
          ensure_installed = {
+            "biome",
             "prettier", -- prettier formatter
             "stylua", -- lua formatter
             "isort", -- python formatter

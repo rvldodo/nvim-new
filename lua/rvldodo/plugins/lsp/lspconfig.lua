@@ -157,10 +157,27 @@ return {
                end,
                filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" }, -- Add relevant filetypes
             })
-         end, -- end,
+         end,
          -- ["rust-analyzer"] = function()
          --    lspconfig["rust-analyzer"].setup({
          --       capabilities = capabilities,
+         --       on_attach = function(client, bufnr)
+         --          client.server_capabilities.documentFormattingProvider = false
+         --
+         --          local buf_map = function(mode, lhs, rhs, opts)
+         --             opts = vim.tbl_extend("keep", opts or {}, { buffer = bufnr })
+         --             vim.keymap.set(mode, lhs, rhs, opts)
+         --          end
+         --
+         --          buf_map("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
+         --          buf_map("n", "K", vim.lsp.buf.hover, { desc = "Hover info" })
+         --          buf_map("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
+         --          buf_map("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename symbol" })
+         --          buf_map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
+         --
+         --          -- Set up additional LSP behavior if needed
+         --          vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+         --       end,
          --       filetypes = { "rust" },
          --       root_dir = lspconfig.root_pattern("Cargo.toml"),
          --       settings = {
@@ -172,6 +189,11 @@ return {
          --       },
          --    })
          -- end,
+         ["biome"] = function()
+            lspconfig["biome"].setup({
+               capabilities = capabilities,
+            })
+         end,
       })
    end,
 }
