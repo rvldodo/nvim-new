@@ -40,6 +40,11 @@ return {
             "prismals",
             "pyright",
             -- "proto",
+
+            -- Add Java & Kotlin LSP servers
+            "jdtls", -- Java (via Eclipse JDT)
+            "kotlin_language_server", -- Kotlin
+            -- Remove sqlfluff from here (it's not an LSP server)
          },
       })
 
@@ -55,6 +60,12 @@ return {
             "golines",
             "gomodifytags",
             "protolint",
+
+            -- Add Java & Kotlin formatters/linters
+            "google-java-format", -- Java formatter
+            "ktlint", -- Kotlin formatter/linter
+            "checkstyle", -- Optional: Java linter
+            "sqlfluff", -- Add sqlfluff here as it's a linter/formatter
          },
       })
    end,

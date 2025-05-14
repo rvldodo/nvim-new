@@ -44,6 +44,7 @@ return {
             "c",
             "go",
             -- "proto",
+            "sql",
          },
          incremental_selection = {
             enable = true,
