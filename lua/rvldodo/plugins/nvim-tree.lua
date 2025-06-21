@@ -1,11 +1,13 @@
 return {
    "nvim-tree/nvim-tree.lua",
-   dependencies = "nvim-tree/nvim-web-devicons",
+   dependencies = {
+      "nvim-tree/nvim-web-devicons", -- Material icons will be loaded through this
+   },
    opts = {
-
       filters = {
          dotfiles = false,
          exclude = { vim.fn.stdpath("config") .. "/lua/custom" },
+         custom = { ".DS_Store" },
       },
       disable_netrw = true,
       hijack_netrw = true,
@@ -19,8 +21,9 @@ return {
       view = {
          adaptive_size = false,
          side = "left",
-         width = 30,
+         width = 35,
          preserve_window_proportions = true,
+         -- relativenumber = true,
       },
       git = {
          enable = true,
@@ -38,43 +41,15 @@ return {
          root_folder_label = false,
          highlight_git = true,
          highlight_opened_files = "none",
-
          indent_markers = {
-            enable = false,
+            -- enable = true,
+            -- icons = {
+            --    corner = "└",
+            --    edge = "│",
+            --    item = "│",
+            --    none = " ",
+            -- },
          },
-
-         -- icons = {
-         --    show = {
-         --       file = true,
-         --       folder = true,
-         --       folder_arrow = true,
-         --       git = true,
-         --    },
-         --
-         --    glyphs = {
-         --       default = "󰈚",
-         --       symlink = "",
-         --       folder = {
-         --          default = "",
-         --          empty = "",
-         --          empty_open = "",
-         --          open = "",
-         --          symlink = "",
-         --          symlink_open = "",
-         --          arrow_open = "",
-         --          arrow_closed = "",
-         --       },
-         --       git = {
-         --          unstaged = "✗",
-         --          staged = "✓",
-         --          unmerged = "",
-         --          renamed = "➜",
-         --          untracked = "★",
-         --          deleted = "",
-         --          ignored = "◌",
-         --       },
-         --    },
-         -- },
          icons = {
             show = {
                file = true,
@@ -83,48 +58,40 @@ return {
                git = true,
             },
             glyphs = {
-               default = "󰈚", -- Default file
-               symlink = "", -- Symlink file
+               default = "", -- Default file icon
+               symlink = "", -- Symlink icon
+               bookmark = "󰆤", -- Bookmark icon
+               modified = "●", -- Modified indicator
                folder = {
-                  default = "", -- Closed folder
-                  open = "", -- Open folder
-                  empty = "", -- Empty closed folder
-                  empty_open = "", -- Empty open folder
-                  symlink = "", -- Symlink folder
-                  symlink_open = "", -- Symlink folder open
-                  arrow_open = "", -- Arrow indicating open
-                  arrow_closed = "", -- Arrow indicating closed
+                  arrow_closed = "", -- Closed folder arrow
+                  arrow_open = "", -- Open folder arrow
+                  default = "", -- Default folder icon
+                  open = "", -- Open folder icon
+                  empty = "", -- Empty folder icon
+                  empty_open = "", -- Empty open folder icon
+                  symlink = "", -- Folder symlink icon
+                  symlink_open = "", -- Folder symlink open icon
                },
                git = {
-                  unstaged = "", -- Unstaged changes
-                  staged = "✓", -- Staged changes
-                  unmerged = "", -- Merge conflict
-                  renamed = "➜", -- Renamed file
-                  untracked = "★", -- Untracked files
-                  deleted = "", -- Deleted files
-                  ignored = "◌", -- Ignored files
+                  unstaged = "", -- Unstaged icon
+                  staged = "", -- Staged icon
+                  unmerged = "", -- Unmerged icon
+                  renamed = "➜", -- Renamed icon
+                  untracked = "", -- Untracked icon
+                  deleted = "", -- Deleted icon
+                  ignored = "◌", -- Ignored icon
                },
             },
          },
       },
-      -- diagnostics = {
-      --    enable = true,
-      --    show_on_dirs = true,
-      --    icons = {
-      --       hint = "",
-      --       info = "",
-      --       warning = "",
-      --       error = "",
-      --    },
-      -- },
       diagnostics = {
          enable = true,
          show_on_dirs = true,
          icons = {
-            hint = "󰌵", -- Hint icon
-            info = "󰙎", -- Info icon
-            warning = "", -- Warning icon
-            error = "", -- Error icon
+            hint = "󰌵", -- Material design hint icon
+            info = "󰋼", -- Material design info icon
+            warning = "󰀪", -- Material design warning icon
+            error = "󰅚", -- Material design error icon
          },
       },
    },
@@ -139,7 +106,6 @@ return {
 
       -- set keymaps
       local keymap = vim.keymap -- for conciseness
-
       keymap.set("n", "<leader>ee", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file explorer" }) -- toggle file explorer
       keymap.set(
          "n",

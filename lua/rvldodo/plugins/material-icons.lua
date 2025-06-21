@@ -1,0 +1,267 @@
+-- Material Design Icons configuration for Neovim
+return {
+   -- "DaikyXendo/nvim-material-icon",
+   -- dependencies = {
+   --    "nvim-tree/nvim-web-devicons",
+   -- },
+   -- config = function()
+   --    -- Setup Material Design Icons
+   --    require("nvim-material-icon").setup({
+   --       -- Enable Material Design Icons globally
+   --       override = true,
+   --       -- Color configuration for material icons
+   --       color_icons = true,
+   --       -- Default icon if no specific icon is found
+   --       default = true,
+   --
+   --       -- Configure nvim-web-devicons to use material icons
+   --       require("nvim-web-devicons").setup({
+   --          color_icons = true,
+   --          default = true,
+   --          strict = true,
+   --          -- Override with material design icons
+   --          override_by_extension = {
+   --             -- Add custom material icons for specific extensions
+   --             ["js"] = {
+   --                icon = "󰌞",
+   --                color = "#F7DF1E",
+   --                name = "Javascript",
+   --             },
+   --             ["ts"] = {
+   --                icon = "󰛦",
+   --                color = "#3178C6",
+   --                name = "Typescript",
+   --             },
+   --             ["jsx"] = {
+   --                icon = "󰜈",
+   --                color = "#61DAFB",
+   --                name = "React",
+   --             },
+   --             ["tsx"] = {
+   --                icon = "󰜈",
+   --                color = "#61DAFB",
+   --                name = "ReactTS",
+   --             },
+   --             ["py"] = {
+   --                icon = "󰌠",
+   --                color = "#3776AB",
+   --                name = "Python",
+   --             },
+   --             ["java"] = {
+   --                icon = "󰬷",
+   --                color = "#ED8B00",
+   --                name = "Java",
+   --             },
+   --             ["go"] = {
+   --                icon = "󰟓",
+   --                color = "#00ADD8",
+   --                name = "Go",
+   --             },
+   --             ["rs"] = {
+   --                icon = "󱘗",
+   --                color = "#CE422B",
+   --                name = "Rust",
+   --             },
+   --             ["html"] = {
+   --                icon = "󰌝",
+   --                color = "#E34F26",
+   --                name = "Html",
+   --             },
+   --             ["css"] = {
+   --                icon = "󰌜",
+   --                color = "#1572B6",
+   --                name = "Css",
+   --             },
+   --             ["scss"] = {
+   --                icon = "󰌜",
+   --                color = "#CF649A",
+   --                name = "Scss",
+   --             },
+   --             ["json"] = {
+   --                icon = "󰘦",
+   --                color = "#FFC107",
+   --                name = "Json",
+   --             },
+   --             ["md"] = {
+   --                icon = "󰍔",
+   --                color = "#083FA1",
+   --                name = "Markdown",
+   --             },
+   --             ["lua"] = {
+   --                icon = "󰢱",
+   --                color = "#000080",
+   --                name = "Lua",
+   --             },
+   --             ["vim"] = {
+   --                icon = "󰕷",
+   --                color = "#019833",
+   --                name = "Vim",
+   --             },
+   --             ["yml"] = {
+   --                icon = "󰈙",
+   --                color = "#FF6B6B",
+   --                name = "Yaml",
+   --             },
+   --             ["yaml"] = {
+   --                icon = "󰈙",
+   --                color = "#FF6B6B",
+   --                name = "Yaml",
+   --             },
+   --             ["toml"] = {
+   --                icon = "󰘦",
+   --                color = "#9C4221",
+   --                name = "Toml",
+   --             },
+   --             ["dockerfile"] = {
+   --                icon = "󰡨",
+   --                color = "#2496ED",
+   --                name = "Dockerfile",
+   --             },
+   --             ["sql"] = {
+   --                icon = "󰆼",
+   --                color = "#336791",
+   --                name = "Sql",
+   --             },
+   --             ["sh"] = {
+   --                icon = "󱆃",
+   --                color = "#4EAA25",
+   --                name = "Shell",
+   --             },
+   --             ["zsh"] = {
+   --                icon = "󱆃",
+   --                color = "#4EAA25",
+   --                name = "Zsh",
+   --             },
+   --             ["fish"] = {
+   --                icon = "󱆃",
+   --                color = "#4EAA25",
+   --                name = "Fish",
+   --             },
+   --             ["git"] = {
+   --                icon = "󰊢",
+   --                color = "#F05032",
+   --                name = "Git",
+   --             },
+   --             ["gitignore"] = {
+   --                icon = "󰊢",
+   --                color = "#F05032",
+   --                name = "GitIgnore",
+   --             },
+   --             ["png"] = {
+   --                icon = "󰋩",
+   --                color = "#F1C40F",
+   --                name = "Image",
+   --             },
+   --             ["jpg"] = {
+   --                icon = "󰋩",
+   --                color = "#F1C40F",
+   --                name = "Image",
+   --             },
+   --             ["jpeg"] = {
+   --                icon = "󰋩",
+   --                color = "#F1C40F",
+   --                name = "Image",
+   --             },
+   --             ["svg"] = {
+   --                icon = "󰜡",
+   --                color = "#FFB13B",
+   --                name = "Svg",
+   --             },
+   --             ["pdf"] = {
+   --                icon = "󰈙",
+   --                color = "#FF0000",
+   --                name = "Pdf",
+   --             },
+   --             ["zip"] = {
+   --                icon = "󰿺",
+   --                color = "#FFC107",
+   --                name = "Archive",
+   --             },
+   --             ["tar"] = {
+   --                icon = "󰿺",
+   --                color = "#FFC107",
+   --                name = "Archive",
+   --             },
+   --             ["gz"] = {
+   --                icon = "󰿺",
+   --                color = "#FFC107",
+   --                name = "Archive",
+   --             },
+   --          },
+   --          -- Override by filename
+   --          override_by_filename = {
+   --             ["package.json"] = {
+   --                icon = "󰎙",
+   --                color = "#CB3837",
+   --                name = "PackageJson",
+   --             },
+   --             ["package-lock.json"] = {
+   --                icon = "󰎙",
+   --                color = "#CB3837",
+   --                name = "PackageLockJson",
+   --             },
+   --             ["yarn.lock"] = {
+   --                icon = "󰎙",
+   --                color = "#2C8EBB",
+   --                name = "YarnLock",
+   --             },
+   --             ["Dockerfile"] = {
+   --                icon = "󰡨",
+   --                color = "#2496ED",
+   --                name = "Dockerfile",
+   --             },
+   --             ["docker-compose.yml"] = {
+   --                icon = "󰡨",
+   --                color = "#2496ED",
+   --                name = "DockerCompose",
+   --             },
+   --             ["docker-compose.yaml"] = {
+   --                icon = "󰡨",
+   --                color = "#2496ED",
+   --                name = "DockerCompose",
+   --             },
+   --             [".gitignore"] = {
+   --                icon = "󰊢",
+   --                color = "#F05032",
+   --                name = "GitIgnore",
+   --             },
+   --             [".env"] = {
+   --                icon = "󰙩",
+   --                color = "#ECD53F",
+   --                name = "Env",
+   --             },
+   --             ["README.md"] = {
+   --                icon = "󰍔",
+   --                color = "#4A90E2",
+   --                name = "Readme",
+   --             },
+   --             ["LICENSE"] = {
+   --                icon = "󰿃",
+   --                color = "#CBCB41",
+   --                name = "License",
+   --             },
+   --             ["Cargo.toml"] = {
+   --                icon = "󱘗",
+   --                color = "#CE422B",
+   --                name = "Cargo",
+   --             },
+   --             ["Cargo.lock"] = {
+   --                icon = "󱘗",
+   --                color = "#CE422B",
+   --                name = "CargoLock",
+   --             },
+   --             ["go.mod"] = {
+   --                icon = "󰟓",
+   --                color = "#00ADD8",
+   --                name = "GoMod",
+   --             },
+   --             ["go.sum"] = {
+   --                icon = "󰟓",
+   --                color = "#00ADD8",
+   --                name = "GoSum",
+   --             },
+   --          },
+   --       }),
+   --    })
+   -- end,
+}
