@@ -70,3 +70,8 @@ vim.opt.mouse = ""
 
 -- Add asterisks in block comments
 vim.opt.formatoptions:append({ "r" })
+
+-- Enhanced visual selection options
+vim.opt.selection = "exclusive" -- Make visual selections exclusive (don't include character under cursor)
+vim.opt.selectmode = "" -- Don't use select mode, always use visual mode
+vim.opt.virtualedit = "block" -- Allow virtual editing in visual block mode

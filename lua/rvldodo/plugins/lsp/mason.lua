@@ -40,9 +40,9 @@ return {
                "gopls",
                "emmet_ls",
                "prismals",
-               "pyright",
+               -- "pyright",
                -- "jdtls",
-               "kotlin_language_server",
+               -- "kotlin_language_server",
             },
          })
       end,

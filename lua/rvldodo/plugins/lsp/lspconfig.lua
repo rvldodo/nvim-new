@@ -18,6 +18,25 @@ return {
 
       local keymap = vim.keymap -- for conciseness
 
+      -- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+      -- ADD THE BORDER CONFIGURATION RIGHT HERE
+      -- Make floating windows have a border
+      local _border = "rounded"
+
+      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+         border = _border,
+      })
+
+      vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signatureHelp, {
+         border = _border,
+      })
+
+      vim.diagnostic.config({
+         float = { border = _border },
+         -- other diagnostic config can stay here
+      })
+      -- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
       vim.api.nvim_create_autocmd("LspAttach", {
          group = vim.api.nvim_create_augroup("UserLspConfig", {}),
          callback = function(ev)

@@ -53,8 +53,11 @@ return {
             ["CursorLineNr"] = { fg = "#b07feb", bold = true },
             ["LineNr"] = { fg = "#7a828e" },
             ["SignColumn"] = { bg = "NONE" },
-            ["Visual"] = { bg = "#22272e77" }, -- More transparent
-            ["VisualNOS"] = { bg = "#22272e77" },
+            -- Enhanced Visual Selection Highlighting
+            ["Visual"] = { bg = "#3d4c63", fg = "#ffffff" }, -- More prominent selection
+            ["VisualNOS"] = { bg = "#3d4c63", fg = "#ffffff" }, -- Non-owning selection
+            ["VisualLine"] = { bg = "#3d4c63", fg = "#ffffff" }, -- Line-wise selection
+            ["VisualBlock"] = { bg = "#2d4f73", fg = "#ffffff" }, -- Block-wise selection
 
             ["@function"] = { fg = "#b07feb", bold = true },
             ["@function.call"] = { fg = "#b07feb" },
