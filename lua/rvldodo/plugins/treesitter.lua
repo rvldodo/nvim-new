@@ -45,6 +45,8 @@ return {
             "go",
             -- "proto",
             "sql",
+            "rust",
+            "toml",
          },
          incremental_selection = {
             enable = true,

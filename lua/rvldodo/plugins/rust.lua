@@ -1,79 +1,109 @@
 return {
+   -- Modern Rust tooling (replaces rust-tools.nvim and rust.vim)
    {
-      "rust-lang/rust.vim",
-      ft = "rust",
-      init = function()
-         vim.g.rustfmt_autosave = 1
-      end,
-   },
-   -- {
-   --    "mrcjkb/rustaceanvim",
-   --    version = "^5",
-   --    ft = { "rust" },
-   --    lazy = false,
-   --    config = function()
-   --       local mason_registry = require("mason-registry")
-   --       local codelldb = mason_registry.get_package("codelldb")
-   --       local extension_path = codelldb:get_install_path() .. "/extension/"
-   --       local codelldb_path = extension_path .. "adapter/codelldb"
-   --       local liblldb_path = extension_path .. "lldb/lib/liblldb.dylib"
-   --       -- If you are on Linux, replace the line above with the line below:
-   --       -- local liblldb_path = extension_path .. "lldb/lib/liblldb.so"
-   --       local cfg = require("rustaceanvim.config")
-   --
-   --       vim.g.rustaceanvim = {
-   --          dap = {
-   --             adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
-   --          },
-   --       }
-   --    end,
-   -- },
-   {
-      "saecki/crates.nvim",
-      ft = { "toml" },
+      "mrcjkb/rustaceanvim",
+      version = "^5",
+      lazy = false,
+      ft = { "rust" },
       config = function()
-         require("crates").setup({
-            completion = {
-               cmp = {
-                  enabled = true,
+         vim.g.rustaceanvim = {
+            -- LSP configuration
+            server = {
+               on_attach = function(client, bufnr)
+                  -- Hover actions
+                  vim.keymap.set("n", "K", function()
+                     vim.cmd.RustLsp({ "hover", "actions" })
+                  end, { buffer = bufnr, desc = "Hover Actions" })
+
+                  -- Code actions
+                  vim.keymap.set("n", "<leader>ca", function()
+                     vim.cmd.RustLsp("codeAction")
+                  end, { buffer = bufnr, desc = "Code Action" })
+
+                  -- Run/Debug runnables
+                  vim.keymap.set("n", "<leader>rr", function()
+                     vim.cmd.RustLsp("runnables")
+                  end, { buffer = bufnr, desc = "Rust Runnables" })
+               end,
+               default_settings = {
+                  ["rust-analyzer"] = {
+                     cargo = {
+                        allFeatures = true,
+                        loadOutDirsFromCheck = true,
+                        buildScripts = {
+                           enable = true,
+                        },
+                     },
+                     checkOnSave = {
+                        enable = true,
+                        command = "clippy",
+                     },
+                     procMacro = {
+                        enable = true,
+                     },
+                     inlayHints = {
+                        enable = true,
+                     },
+                  },
                },
             },
-         })
-         require("cmp").setup.buffer({
-            sources = { { name = "crates" } },
-         })
-      end,
-   },
-   {
-      "theHamsta/nvim-dap-virtual-text",
-      lazy = false,
-      config = function(_, opts)
-         require("nvim-dap-virtual-text").setup()
-      end,
-   },
-   {
-      "simrat39/rust-tools.nvim",
-      ft = "rust",
-      dependencies = "neovim/nvim-lspconfig",
-      opts = function()
-         local cmp_nvim_lsp = require("cmp_nvim_lsp")
-         -- local on_attach = require("plugins.configs.lspconfig").on_attach
-
-         local rt = require("rust-tools")
-
-         vim.g.rustaceanvim = {
-            server = {
-               on_attach = function(_, bufnr)
-                  -- Hover actions
-                  vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
-                  -- Code action groups
-                  vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
-               end,
+            -- DAP configuration (debugging)
+            dap = {
+               -- Uncomment if you want debugging support via codelldb
+               -- adapter = require('rustaceanvim.config').get_codelldb_adapter(
+               --    vim.fn.stdpath("data") .. "/mason/packages/codelldb/extension/adapter/codelldb",
+               --    vim.fn.stdpath("data") .. "/mason/packages/codelldb/extension/lldb/lib/liblldb.so"
+               -- ),
             },
          }
       end,
-      config = function(_, opts)
-         require("rust-tools").setup(opts)
+   },
+
+   -- Cargo.toml dependency hints and management
+   {
+      "saecki/crates.nvim",
+      event = { "BufRead Cargo.toml" },
+      config = function()
+         require("crates").setup({
+            completion = {
+               cmp = { enabled = true },
+            },
+            lsp = {
+               enabled = true,
+               actions = true,
+               completion = true,
+               hover = true,
+            },
+         })
+      end,
+   },
+
+   -- DAP (Debugger) - Optional but recommended
+   {
+      "mfussenegger/nvim-dap",
+      ft = "rust",
+      config = function()
+         -- Basic DAP keymaps
+         vim.keymap.set("n", "<leader>db", "<cmd>DapToggleBreakpoint<CR>", { desc = "Toggle Breakpoint" })
+         vim.keymap.set("n", "<leader>dc", "<cmd>DapContinue<CR>", { desc = "Continue" })
+         vim.keymap.set("n", "<leader>ds", "<cmd>DapStepOver<CR>", { desc = "Step Over" })
+         vim.keymap.set("n", "<leader>di", "<cmd>DapStepInto<CR>", { desc = "Step Into" })
+      end,
+   },
+
+   -- Show variable values inline while debugging
+   {
+      "theHamsta/nvim-dap-virtual-text",
+      dependencies = { "mfussenegger/nvim-dap" },
+      config = function()
+         require("nvim-dap-virtual-text").setup({
+            enabled = true,
+            enabled_commands = true,
+            highlight_changed_variables = true,
+            highlight_new_as_changed = false,
+            show_stop_reason = true,
+            commented = false,
+         })
       end,
    },
 }

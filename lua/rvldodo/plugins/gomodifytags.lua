@@ -8,6 +8,6 @@ return {
       transformation = "snakecase",
       skip_unexported = true,
       override = true,
-      options = { "json=omitempty" },
+      -- options = { "json=omitempty" },
    },
 }
