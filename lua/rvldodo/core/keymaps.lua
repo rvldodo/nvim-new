@@ -52,3 +52,8 @@ keymap.set("n", "<leader>vb", "<C-v>", { desc = "Enter visual block mode" })
 
 -- Quick select all
 keymap.set("n", "<leader>va", "ggVG", { desc = "Select all text" })
+
+keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
+keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
+keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to lower window" })
+keymap.set("n", "<C-k>", "<C-w>k", { desc = "Move to upper window" })
