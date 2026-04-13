@@ -22,12 +22,13 @@ return {
             graphql = { "prettier" },
             liquid = { "prettier" },
             lua = { "stylua" },
-            python = { "isort", "black" },
+            python = { "isort", "black", "ruff_format" },
             golang = { "golines" },
             proto = { "protolint" },
             java = { "google-java-format" },
             kt = { "ktlint" },
             kotlin = { "ktlint" },
+            rust = { "rustfmt" },
             -- SQL formatters will be added in the opts function below
          },
          format_on_save = {

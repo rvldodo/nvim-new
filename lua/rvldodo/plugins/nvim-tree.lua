@@ -26,11 +26,11 @@ return {
          -- relativenumber = true,
       },
       git = {
-         enable = true,
+         enable = false,
          ignore = false,
       },
       filesystem_watchers = {
-         enable = true,
+         enable = false,
       },
       actions = {
          open_file = {
@@ -85,7 +85,7 @@ return {
          },
       },
       diagnostics = {
-         enable = true,
+         enable = false,
          show_on_dirs = true,
          icons = {
             hint = "󰌵", -- Material design hint icon
@@ -117,3 +117,19 @@ return {
       keymap.set("n", "<leader>er", "<cmd>NvimTreeRefresh<CR>", { desc = "Refresh file explorer" }) -- refresh file explorer
    end,
 }
+
+-- return {
+--    "nvim-tree/nvim-tree.lua",
+--    cmd = { "NvimTreeToggle", "NvimTreeOpen" }, -- 🔥 lazy load
+--    keys = {
+--       { "<leader>ee", "<cmd>NvimTreeToggle<CR>" },
+--       { "<leader>ef", "<cmd>NvimTreeFindFileToggle<CR>" },
+--       { "<leader>ec", "<cmd>NvimTreeCollapse<CR>" },
+--       { "<leader>er", "<cmd>NvimTreeRefresh<CR>" },
+--    },
+--    opts = {
+--       filesystem_watchers = { enable = false },
+--       git = { enable = false },
+--       diagnostics = { enable = false },
+--    },
+-- }

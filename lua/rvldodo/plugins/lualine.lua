@@ -7,7 +7,7 @@ return {
 
       -- Configure nvim-web-devicons for monochrome to match Cursor AI
       require("nvim-web-devicons").setup({
-         color_icons = false, -- Disable colored icons for cleaner look
+         color_icons = true, -- Disable colored icons for cleaner look
          default = true,
       })
 
@@ -252,4 +252,3 @@ return {
       })
    end,
 }
-

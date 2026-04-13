@@ -13,6 +13,11 @@ return {
       treesitter.setup({ -- enable syntax highlighting
          highlight = {
             enable = true,
+            disable = function(_, buf)
+               local max = 100 * 1024 -- 100KB
+               local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+               return ok and stats and stats.size > max
+            end,
          },
          -- enable indentation
          indent = { enable = true },

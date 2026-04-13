@@ -134,25 +134,42 @@ return {
             })
          end,
          ["lua_ls"] = function()
-            -- configure lua server (with special settings)
-            lspconfig["lua_ls"].setup({
+            lspconfig.lua_ls.setup({
                capabilities = capabilities,
+
                settings = {
                   Lua = {
-                     -- make the language server recognize "vim" global
                      diagnostics = {
                         globals = { "vim" },
                      },
-                     completion = {
-                        callSnippet = "Replace",
+                     workspace = {
+                        checkThirdParty = false,
+                     },
+                     telemetry = {
+                        enable = false,
                      },
                   },
                },
             })
          end,
          ["gopls"] = function()
-            lspconfig["gopls"].setup({
+            lspconfig.gopls.setup({
                capabilities = capabilities,
+
+               settings = {
+                  gopls = {
+                     analyses = {
+                        unusedparams = true,
+                        unusedwrite = true,
+                     },
+                     staticcheck = true,
+                     gofumpt = true,
+
+                     -- performance
+                     usePlaceholders = false,
+                     completeUnimported = true,
+                  },
+               },
             })
          end,
          ["html"] = function()
@@ -168,41 +185,40 @@ return {
          --       root_dir = lspconfig.util.root_pattern("buf.yaml", ".git"),
          --    })
          ["ts_ls"] = function()
-            lspconfig["ts_ls"].setup({
+            lspconfig.ts_ls.setup({
                capabilities = capabilities,
-               on_attach = function(client, bufnr)
-                  -- Avoid formatting conflicts with other formatters
+
+               settings = {
+                  typescript = {
+                     inlayHints = {
+                        includeInlayParameterNameHints = "none",
+                        includeInlayVariableTypeHints = false,
+                     },
+                  },
+               },
+
+               on_attach = function(client)
                   client.server_capabilities.documentFormattingProvider = false
                end,
-               filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" }, -- Add relevant filetypes
+
+               filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
             })
          end,
-         ["rust-analyzer"] = function()
-            lspconfig["rust-analyzer"].setup({
+         ["rust_analyzer"] = function()
+            lspconfig.rust_analyzer.setup({
                capabilities = capabilities,
-               on_attach = function(client, bufnr)
+
+               on_attach = function(client)
                   client.server_capabilities.documentFormattingProvider = false
-
-                  local buf_map = function(mode, lhs, rhs, opts)
-                     opts = vim.tbl_extend("keep", opts or {}, { buffer = bufnr })
-                     vim.keymap.set(mode, lhs, rhs, opts)
-                  end
-
-                  buf_map("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
-                  buf_map("n", "K", vim.lsp.buf.hover, { desc = "Hover info" })
-                  buf_map("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
-                  buf_map("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename symbol" })
-                  buf_map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
-
-                  -- Set up additional LSP behavior if needed
-                  vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
                end,
-               filetypes = { "rust" },
-               root_dir = lspconfig.root_pattern("Cargo.toml"),
+
                settings = {
                   ["rust-analyzer"] = {
                      cargo = {
-                        allFeatures = true,
+                        allFeatures = false, -- 🔥 IMPORTANT (true = slower)
+                     },
+                     checkOnSave = {
+                        command = "clippy",
                      },
                   },
                },
@@ -211,6 +227,22 @@ return {
          ["biome"] = function()
             lspconfig["biome"].setup({
                capabilities = capabilities,
+            })
+         end,
+         ["pyright"] = function()
+            lspconfig.pyright.setup({
+               capabilities = capabilities,
+
+               settings = {
+                  python = {
+                     analysis = {
+                        typeCheckingMode = "basic", -- 🔥 faster than strict
+                        autoSearchPaths = true,
+                        useLibraryCodeForTypes = true,
+                        diagnosticMode = "openFilesOnly", -- 🔥 huge performance boost
+                     },
+                  },
+               },
             })
          end,
       })

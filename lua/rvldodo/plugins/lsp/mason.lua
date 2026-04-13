@@ -1,16 +1,9 @@
 return {
    {
       "williamboman/mason.nvim",
-      dependencies = {
-         "williamboman/mason-lspconfig.nvim",
-         "WhoIsSethDaniel/mason-tool-installer.nvim",
-      },
+      build = ":MasonUpdate",
       config = function()
-         -- import mason
-         local mason = require("mason")
-
-         -- enable mason and configure icons
-         mason.setup({
+         require("mason").setup({
             ui = {
                icons = {
                   package_installed = "✓",
@@ -21,14 +14,18 @@ return {
          })
       end,
    },
+
    {
       "williamboman/mason-lspconfig.nvim",
-      dependencies = { "williamboman/mason.nvim" },
+      dependencies = {
+         "williamboman/mason.nvim",
+         "neovim/nvim-lspconfig", -- 🔥 REQUIRED
+      },
       config = function()
          local mason_lspconfig = require("mason-lspconfig")
+         local lspconfig = require("lspconfig")
 
          mason_lspconfig.setup({
-            -- list of servers for mason to install
             ensure_installed = {
                "ts_ls",
                "html",
@@ -40,21 +37,25 @@ return {
                "gopls",
                "emmet_ls",
                "prismals",
-               -- "pyright",
-               -- "jdtls",
-               -- "kotlin_language_server",
-               "rust-analyzer",
+               "pyright",
+               "rust_analyzer", -- ⚠️ FIX NAME
             },
+         })
+
+         -- 🔥 auto setup all servers
+         mason_lspconfig.setup_handlers({
+            function(server_name)
+               lspconfig[server_name].setup({})
+            end,
          })
       end,
    },
+
    {
       "WhoIsSethDaniel/mason-tool-installer.nvim",
       dependencies = { "williamboman/mason.nvim" },
       config = function()
-         local mason_tool_installer = require("mason-tool-installer")
-
-         mason_tool_installer.setup({
+         require("mason-tool-installer").setup({
             ensure_installed = {
                "biome",
                "prettier",
@@ -62,6 +63,7 @@ return {
                "isort",
                "black",
                "pylint",
+               "ruff",
                "eslint_d",
                "golines",
                "gomodifytags",
@@ -71,6 +73,8 @@ return {
                "checkstyle",
                "sqlfluff",
             },
+            auto_update = false,
+            run_on_start = true, -- 🔥 IMPORTANT
          })
       end,
    },

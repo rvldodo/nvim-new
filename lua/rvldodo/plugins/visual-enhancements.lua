@@ -8,15 +8,16 @@ return {
          opts.textobjects.select = opts.textobjects.select or {}
          opts.textobjects.select.enable = true
          opts.textobjects.select.lookahead = true
-         opts.textobjects.select.keymaps = opts.textobjects.select.keymaps or {
-            -- Visual selection textobjects
-            ["af"] = "@function.outer",
-            ["if"] = "@function.inner",
-            ["ac"] = "@class.outer",
-            ["ic"] = "@class.inner",
-            ["ab"] = "@block.outer",
-            ["ib"] = "@block.inner",
-         }
+         opts.textobjects.select.keymaps = opts.textobjects.select.keymaps
+            or {
+               -- Visual selection textobjects
+               ["af"] = "@function.outer",
+               ["if"] = "@function.inner",
+               ["ac"] = "@class.outer",
+               ["ic"] = "@class.inner",
+               ["ab"] = "@block.outer",
+               ["ib"] = "@block.inner",
+            }
          return opts
       end,
    },

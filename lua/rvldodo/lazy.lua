@@ -20,4 +20,3 @@ require("lazy").setup({ { import = "rvldodo.plugins" }, { import = "rvldodo.plug
       notify = false,
    },
 })
-
