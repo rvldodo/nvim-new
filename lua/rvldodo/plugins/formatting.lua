@@ -19,8 +19,8 @@ return {
             graphql = { "prettier" },
             liquid = { "prettier" },
             lua = { "stylua" },
-            python = { "isort", "black" },
-            golang = { "golines" },
+            python = { "ruff_organize_imports", "ruff_format" },
+            go = { "golines" },
             proto = { "protolint" },
          },
          format_on_save = {

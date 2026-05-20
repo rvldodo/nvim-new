@@ -3,9 +3,6 @@ return {
    config = function()
       local spectre = require("spectre")
 
-      -- Open Spectre
-      vim.keymap.set("n", "<leader>S", spectre.open, { desc = "Open Spectre" })
-
       -- Search and replace in current file
       vim.keymap.set("n", "<leader>sw", function()
          spectre.open_visual({ select_word = true })

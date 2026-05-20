@@ -1,6 +1,7 @@
 return {
    {
       "williamboman/mason.nvim",
+      version = "^1.0", -- pin to v1.x; v2 broke get_install_path + tool-installer
       build = ":MasonUpdate",
       config = function()
          require("mason").setup({
@@ -17,13 +18,13 @@ return {
 
    {
       "williamboman/mason-lspconfig.nvim",
+      version = "^1.0", -- pin to v1.x; v2 removed setup_handlers
       dependencies = {
          "williamboman/mason.nvim",
          "neovim/nvim-lspconfig", -- 🔥 REQUIRED
       },
       config = function()
          local mason_lspconfig = require("mason-lspconfig")
-         local lspconfig = require("lspconfig")
 
          mason_lspconfig.setup({
             ensure_installed = {
@@ -38,16 +39,10 @@ return {
                "emmet_ls",
                "prismals",
                "pyright",
-               "rust_analyzer", -- ⚠️ FIX NAME
+               "rust_analyzer",
             },
          })
-
-         -- 🔥 auto setup all servers
-         mason_lspconfig.setup_handlers({
-            function(server_name)
-               lspconfig[server_name].setup({})
-            end,
-         })
+         -- NOTE: per-server setup handlers live in lsp/lspconfig.lua
       end,
    },
 
@@ -60,10 +55,7 @@ return {
                "biome",
                "prettier",
                "stylua",
-               "isort",
-               "black",
-               "pylint",
-               "ruff",
+               "ruff", -- replaces isort/black/pylint
                "eslint_d",
                "golines",
                "gomodifytags",
@@ -72,6 +64,7 @@ return {
                "ktlint",
                "checkstyle",
                "sqlfluff",
+               "codelldb", -- needed by rustaceanvim DAP
             },
             auto_update = false,
             run_on_start = true, -- 🔥 IMPORTANT

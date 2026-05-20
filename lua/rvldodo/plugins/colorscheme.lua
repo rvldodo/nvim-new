@@ -1,188 +1,47 @@
 return {
-   -- {
-   --    "xiyaowong/transparent.nvim", -- Example plugin for transparency (optional)
-   --    lazy = false,
-   --    opts = {
-   --       enable = true, -- Enable transparency
-   --    },
-   --    config = function()
-   --       vim.opt.termguicolors = true
-   --       vim.cmd([[
-   --       highlight CursorLine guibg=#2e2e2e cterm=none
-   --       highlight Cursor guifg=#ffffff guibg=#5f87ff
-   --       highlight CursorLineNr guifg=#ffaf00 guibg=none
-   --    ]])
-   --    end,
-   -- },
-   -- {
-   --    "navarasu/onedark.nvim",
-   --    opts = {
-   --       style = "deep",
-   --       transparent = true,
-   --       term_colors = true,
-   --       diagnostics = {
-   --          darker = true,
-   --          undercurl = true,
-   --          background = true,
-   --       },
-   --    },
-   --    config = function(_, opts)
-   --       require("onedark").setup(opts)
-   --       vim.cmd([[colorscheme onedark]])
-   --       -- Add specific cursor settings for this colorscheme
-   --       vim.cmd([[
-   --       highlight Cursor guifg=#ffffff guibg=#ff0000
-   --       highlight CursorLine guibg=#2e2e2e
-   --       highlight CursorLineNr guifg=#00ff00
-   --    ]])
-   --    end,
-   -- },
-   -- {
-   --    "ellisonleao/gruvbox.nvim",
-   --    opts = {
-   --       transparent_mode = true,
-   --       contrast = "soft",
-   --    },
-   --    config = function(_, opts)
-   --       require("gruvbox").setup(opts)
-   --       vim.cmd("colorscheme gruvbox")
-   --       vim.cmd([[
-   --       highlight Cursor guifg=#000000 guibg=#fabd2f
-   --       highlight CursorLine guibg=#3c3836
-   --       highlight CursorLineNr guifg=#fb4934
-   --    ]])
-   --    end,
-   -- },
-   -- {
-   --    "navarasu/onedark.nvim",
-   --    opts = {
-   --       -- Main options --
-   --       style = "deep", -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
-   --       transparent = true, -- Show/hide background
-   --       term_colors = true, -- Change terminal color as per the selected theme style
-   --       ending_tildes = false, -- Show the end-of-buffer tildes. By default they are hidden
-   --       cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
-   --
-   --       -- toggle theme style ---
-   --       toggle_style_key = nil, -- keybind to toggle theme style. Leave it nil to disable it, or set it to a string, for example "<leader>ts"
-   --       toggle_style_list = { "dark", "darker", "cool", "deep", "warm", "warmer", "light" }, -- List of styles to toggle between
-   --
-   --       -- Change code style ---
-   --       -- Options are italic, bold, underline, none
-   --       -- You can configure multiple style with comma separated, For e.g., keywords = 'italic,bold'
-   --       code_style = {
-   --          comments = "italic",
-   --          keywords = "none",
-   --          functions = "none",
-   --          strings = "none",
-   --          variables = "none",
-   --       },
-   --
-   --       -- Lualine options --
-   --       lualine = {
-   --          transparent = false, -- lualine center bar transparency
-   --       },
-   --
-   --       -- Custom Highlights --
-   --       colors = {}, -- Override default colors
-   --       highlights = {}, -- Override highlight groups
-   --
-   --       -- Plugins Config --
-   --       diagnostics = {
-   --          darker = true, -- darker colors for diagnostic
-   --          undercurl = true, -- use undercurl instead of underline for diagnostics
-   --          background = true, -- use background color for virtual text
-   --       },
-   --    },
-   --    -- Lua
-   --    config = function(_, opts)
-   --       require("onedark").setup(opts)
-   --       vim.cmd([[colorscheme onedark]])
-   --    end,
-   -- },
-   -- {
-   --    "zootedb0t/citruszest.nvim",
-   --    lazy = false,
-   --    priority = 1000,
-   --    opts = {
-   --       option = {
-   --          transparent = true, -- Enable/Disable transparency
-   --          bold = false,
-   --          italic = true,
-   --       },
-   --       -- Override default highlight style in this table
-   --       -- E.g If you want to override `Constant` highlight style
-   --       style = {
-   --          -- This will change Constant foreground color and make it bold.
-   --          Constant = { fg = "#FFFFFF", bold = true },
-   --       },
-   --    },
-   --    config = function(_, opts)
-   --       require("citruszest").setup(opts)
-   --       vim.cmd([[colorscheme citruszest]])
-   --    end,
-   -- },
    {
-      "cpea2506/one_monokai.nvim",
+      "folke/tokyonight.nvim",
+      lazy = false,
+      priority = 1000,
       opts = {
+         style = "moon", -- "storm" | "moon" | "night" | "day"
          transparent = true,
-         colors = {},
-         italics = true,
+         terminal_colors = true,
+         styles = {
+            comments = { italic = true },
+            keywords = { italic = true },
+            functions = {},
+            variables = {},
+            sidebars = "transparent",
+            floats = "transparent",
+         },
+         lualine_bold = true,
+         on_highlights = function(hl, c)
+            -- Slightly punchier borders & subtle line numbers for a clean look
+            hl.FloatBorder = { fg = c.blue }
+            hl.WinSeparator = { fg = c.bg_highlight }
+            hl.LineNr = { fg = c.dark5 }
+            hl.CursorLineNr = { fg = c.orange, bold = true }
+         end,
       },
       config = function(_, opts)
-         require("one_monokai").setup(opts)
-         vim.cmd([[colorscheme one_monokai]])
+         require("tokyonight").setup(opts)
+         vim.cmd.colorscheme("tokyonight-moon")
       end,
    },
+
+   -- Kept as a fallback/alt — uncomment the cmd.colorscheme line above and
+   -- swap to one of these if you ever want to try another theme:
    -- {
-   --    "craftzdog/solarized-osaka.nvim",
+   --    "catppuccin/nvim",
+   --    name = "catppuccin",
    --    lazy = true,
-   --    priority = 1000,
-   --    opts = function()
-   --       return {
-   --          transparent = true,
-   --       }
-   --    end,
+   --    opts = { flavour = "mocha", transparent_background = true },
    -- },
    -- {
-   --    "sainnhe/sonokai",
-   --    priority = 1000,
-   --    config = function()
-   --       vim.g.sonokai_transparent_background = "1"
-   --       vim.g.sonokai_enable_italic = "1"
-   --       vim.g.sonokai_style = "andromeda"
-   --       vim.cmd.colorscheme("sonokai")
-   --    end,
-   -- },
-   -- {
-   --    "ellisonleao/gruvbox.nvim",
-   --    priority = 1000,
-   --    config = function()
-   --       require("gruvbox").setup({
-   --          terminal_colors = true, -- add neovim terminal colors
-   --          undercurl = true,
-   --          underline = true,
-   --          bold = true,
-   --          italic = {
-   --             strings = true,
-   --             emphasis = true,
-   --             comments = true,
-   --             operators = false,
-   --             folds = true,
-   --          },
-   --          strikethrough = true,
-   --          invert_selection = false,
-   --          invert_signs = false,
-   --          invert_tabline = false,
-   --          invert_intend_guides = false,
-   --          inverse = true, -- invert background for search, diffs, statuslines and errors
-   --          contrast = "", -- can be "hard", "soft" or empty string
-   --          palette_overrides = {},
-   --          overrides = {},
-   --          dim_inactive = false,
-   --          transparent_mode = true,
-   --       })
-   --       vim.cmd("colorscheme gruvbox")
-   --    end,
+   --    "rose-pine/neovim",
+   --    name = "rose-pine",
+   --    lazy = true,
+   --    opts = { variant = "main", styles = { transparency = true } },
    -- },
 }

@@ -1,5 +1,6 @@
 return {
    "neovim/nvim-lspconfig",
+   version = "^1.0", -- pin to v1.x; v2 dropped lspconfig.X.setup() in favor of vim.lsp.config
    event = { "BufReadPre", "BufNewFile" },
    dependencies = {
       "hrsh7th/cmp-nvim-lsp",
@@ -97,7 +98,7 @@ return {
          vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
       end
 
-      mason_lspconfig.setup({
+      mason_lspconfig.setup_handlers({
          -- default handler for installed servers
          function(server_name)
             lspconfig[server_name].setup({
