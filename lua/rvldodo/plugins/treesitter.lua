@@ -27,6 +27,8 @@ return {
             "javascript",
             "typescript",
             "tsx",
+            "jsdoc", -- /** */ blocks in TS/JS
+            "regex", -- injected into JS/TS regex literals
             "yaml",
             "html",
             "css",
@@ -43,7 +45,23 @@ return {
             "query",
             "vimdoc",
             "c",
+            "cpp",
+            "c_sharp",
+            "cmake",
+            "make",
             "go",
+            "rust",
+            "toml",
+            "kotlin",
+            "dart",
+            -- python & friends
+            "python",
+            "requirements", -- requirements.txt
+            "htmldjango", -- django templates
+            "jinja", -- flask / jinja2 templates
+            "jinja_inline",
+            "sql",
+            "ini", -- setup.cfg, tox.ini, alembic.ini
             -- "proto",
          },
          incremental_selection = {

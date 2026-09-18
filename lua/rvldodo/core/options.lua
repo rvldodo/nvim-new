@@ -69,3 +69,19 @@ vim.opt.mouse = ""
 
 -- Add asterisks in block comments
 vim.opt.formatoptions:append({ "r" })
+
+-- Python provider for remote plugins (molten-nvim). A dedicated venv so
+-- pynvim/jupyter_client never have to be installed into project venvs.
+-- Create it with:
+--   uv venv ~/.local/share/nvim/venv --python 3.12
+--   uv pip install --python ~/.local/share/nvim/venv/bin/python \
+--       pynvim jupyter_client jupytext nbformat plotly kaleido
+-- core/python.lua deliberately ignores this when resolving a project's
+-- interpreter for the LSP/DAP.
+local nvim_venv = vim.fn.stdpath("data") .. "/venv"
+if vim.fn.executable(nvim_venv .. "/bin/python") == 1 then
+   vim.g.python3_host_prog = nvim_venv .. "/bin/python"
+   -- jupytext.nvim shells out to a bare `jupytext`; append (not prepend) so
+   -- this venv's `python` never shadows pyenv/project interpreters.
+   vim.env.PATH = vim.env.PATH .. ":" .. nvim_venv .. "/bin"
+end

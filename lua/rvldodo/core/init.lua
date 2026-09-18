@@ -1,2 +1,5 @@
 require("rvldodo.core.options")
 require("rvldodo.core.keymaps")
+require("rvldodo.core.filetypes")
+require("rvldodo.core.cpp")
+require("rvldodo.core.nestjs")
