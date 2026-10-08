@@ -102,7 +102,7 @@ return {
             },
          }
 
-         -- ── Node / NestJS / Jest ─────────────────────────────────────
+         -- ── Node / Express / NestJS / Jest ───────────────────────────
          -- vscode-js-debug (mason: js-debug-adapter). neotest-jest's dap
          -- strategy also targets the `pwa-node` type, so <leader>td works
          -- for jest once this adapter exists.
@@ -118,18 +118,52 @@ return {
             },
          }
 
+         -- Ask which package.json script to launch. Returned as a coroutine:
+         -- nvim-dap waits on it, so vim.ui.select's callback can resume it.
+         local function pick_script()
+            return coroutine.create(function(co)
+               local names = vim.tbl_keys(ts.package_json().scripts or {})
+               table.sort(names)
+               vim.ui.select(names, { prompt = "Debug script" }, function(choice)
+                  -- Scheduled: some vim.ui.select backends call back before
+                  -- nvim-dap has yielded, and resuming then errors.
+                  vim.schedule(function()
+                     coroutine.resume(co, choice and { "run", choice } or dap.ABORT)
+                  end)
+               end)
+            end)
+         end
+
          local js_configs = {
             {
-               -- Day-to-day flow: `npm run start:debug` in a terminal (nest
-               -- start --debug --watch), then attach. `restart` re-attaches
-               -- every time the watcher restarts the process.
-               name = "NestJS: attach to :9229 (start:debug)",
+               -- Day-to-day flow: start the server with the inspector in a
+               -- terminal — `npm run start:debug` (Nest), `nodemon --inspect
+               -- app.js` or `node --inspect app.js` (Express) — then attach.
+               -- `restart` re-attaches every time the watcher restarts it.
+               name = "Node / NestJS: attach to :9229",
                type = "pwa-node",
                request = "attach",
                port = 9229,
                restart = true,
                cwd = "${workspaceFolder}",
                sourceMaps = true,
+               skipFiles = { "<node_internals>/**", "**/node_modules/**" },
+            },
+            {
+               -- Express `dev` / `start` (nodemon, node --watch, tsx watch, …)
+               -- with nvim owning the process. js-debug injects the inspector
+               -- through NODE_OPTIONS, so the script needs no --inspect, and
+               -- autoAttachChildProcesses follows nodemon into its node child.
+               name = "Node: launch package.json script…",
+               type = "pwa-node",
+               request = "launch",
+               runtimeExecutable = ts.package_manager,
+               runtimeArgs = pick_script,
+               autoAttachChildProcesses = true,
+               restart = true,
+               cwd = "${workspaceFolder}",
+               sourceMaps = true,
+               console = "integratedTerminal",
                skipFiles = { "<node_internals>/**", "**/node_modules/**" },
             },
             {
@@ -196,9 +230,38 @@ return {
                console = "integratedTerminal",
                skipFiles = { "<node_internals>/**", "**/node_modules/**" },
             },
+            {
+               -- Older Express projects: mocha + chai + supertest.
+               name = "Mocha: debug current file",
+               type = "pwa-node",
+               request = "launch",
+               runtimeExecutable = "node",
+               runtimeArgs = { "${workspaceFolder}/node_modules/mocha/bin/mocha.js", "--timeout", "999999", "${file}" },
+               cwd = "${workspaceFolder}",
+               sourceMaps = true,
+               console = "integratedTerminal",
+               skipFiles = { "<node_internals>/**", "**/node_modules/**" },
+            },
          }
 
-         dap.configurations.typescript = js_configs
+         -- Plain TS (Express + tsx) can run the file directly through the
+         -- project's tsx. Not for Nest: esbuild drops emitDecoratorMetadata,
+         -- which Nest's DI needs — use the start:debug entries there.
+         dap.configurations.typescript = vim.list_extend({
+            {
+               name = "Node: launch current file (tsx)",
+               type = "pwa-node",
+               request = "launch",
+               runtimeExecutable = function()
+                  return ts.local_bin("tsx") or "tsx"
+               end,
+               program = "${file}",
+               cwd = "${workspaceFolder}",
+               sourceMaps = true,
+               console = "integratedTerminal",
+               skipFiles = { "<node_internals>/**", "**/node_modules/**" },
+            },
+         }, vim.list_slice(js_configs))
          -- Plain JS can also just run the file; a Nest .ts file can't (node
          -- won't strip decorators), so that entry stays JS-only.
          dap.configurations.javascript = vim.list_extend({

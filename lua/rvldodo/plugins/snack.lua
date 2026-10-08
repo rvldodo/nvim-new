@@ -7,18 +7,12 @@ return {
       bigfile = { enabled = true },
       dashboard = {
          enabled = true,
+         width = 56,
          sections = {
-            { section = "header" },
-            { section = "keys", gap = 1, padding = 1 },
+            { section = "header", padding = 2 },
+            { section = "keys", gap = 1, padding = 2 },
+            { icon = " ", title = "Recent Files", section = "recent_files", cwd = true, limit = 5, indent = 2, padding = 2 },
             { section = "startup" },
-            {
-               section = "terminal",
-               cmd = "ascii-image-converter ~/.config/nvim/image/joker.png -C -c",
-               random = 10,
-               pane = 2,
-               indent = 4,
-               height = 30,
-            },
          },
       },
       notifier = {

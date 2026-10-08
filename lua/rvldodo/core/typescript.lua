@@ -3,7 +3,8 @@
 --
 -- Shared by plugins/formatting.lua (biome vs prettier, eslint vs oxlint),
 -- plugins/debugger.lua (which runner launches `start:debug`), plugins/nestjs.lua
--- (jest vs vitest adapter), core/nestjs.lua (`nest g`) and snippets/nestjs.lua,
+-- (jest/vitest/mocha adapter), core/nestjs.lua (`nest g`), core/node.lua
+-- (package.json scripts) and snippets/{nestjs,express}.lua,
 -- so they never disagree about what "the project" is — which matters in a
 -- pnpm/yarn workspace where the lockfile lives two directories above the
 -- package you're editing.
@@ -104,6 +105,24 @@ function M.is_nest(from)
    return has_dep(M.package_json(from), "@nestjs/core")
 end
 
+--- True when `from` is inside an Express project.
+function M.is_express(from)
+   return has_dep(M.package_json(from), "express")
+end
+
+--- "esm" | "cjs": which module syntax a new import in this buffer should use.
+--- TS and .mjs are always ESM-syntax (tsc compiles imports down if needed);
+--- .cjs is always CommonJS; plain .js follows package.json "type".
+function M.module_type(from)
+   local name = type(from) == "string" and from or vim.api.nvim_buf_get_name(from or 0)
+   if name:match("%.cjs$") then
+      return "cjs"
+   elseif name:match("%.mjs$") or name:match("%.[cm]?tsx?$") then
+      return "esm"
+   end
+   return M.package_json(from).type == "module" and "esm" or "cjs"
+end
+
 local PRETTIER_CONFIGS = {
    ".prettierrc",
    ".prettierrc.json",
@@ -166,7 +185,8 @@ function M.linter(from)
    return nil
 end
 
---- "vitest" | "jest" | nil.
+--- "vitest" | "jest" | "mocha" | nil. Mocha is common in older Express
+--- projects (mocha + chai + supertest).
 function M.test_runner(from)
    if
       find_up({
@@ -184,11 +204,21 @@ function M.test_runner(from)
    then
       return "jest"
    end
+   if
+      find_up(
+         { ".mocharc.js", ".mocharc.cjs", ".mocharc.json", ".mocharc.jsonc", ".mocharc.yml", ".mocharc.yaml" },
+         from
+      )
+   then
+      return "mocha"
+   end
    local pkg = M.package_json(from)
    if has_dep(pkg, "vitest") then
       return "vitest"
    elseif pkg.jest ~= nil or has_dep(pkg, "jest") then
       return "jest"
+   elseif pkg.mocha ~= nil or has_dep(pkg, "mocha") then
+      return "mocha"
    end
    return nil
 end

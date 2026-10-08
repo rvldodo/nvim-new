@@ -65,7 +65,28 @@ return {
                { "filename", path = 1, symbols = { modified = " ", readonly = " " } },
                { lazy_status.updates, cond = lazy_status.has_updates, color = { fg = colors.yellow } },
             },
-            lualine_x = { "diagnostics", "encoding", "fileformat", "filetype" },
+            lualine_x = {
+               -- Active dbee connection (set in plugins/nvim-dbee.lua).
+               {
+                  function()
+                     local a = vim.g.dbee_active
+                     local text = a.icon .. " " .. a.name .. (a.database and (":" .. a.database) or "")
+                     return a.prod and (text .. " PROD") or text
+                  end,
+                  cond = function() return vim.g.dbee_active ~= nil end,
+                  color = function()
+                     local a = vim.g.dbee_active or {}
+                     if a.prod then
+                        return { fg = colors.bg, bg = colors.red, gui = "bold" }
+                     end
+                     return { fg = a.color, gui = "bold" }
+                  end,
+               },
+               "diagnostics",
+               "encoding",
+               "fileformat",
+               "filetype",
+            },
             lualine_y = { "progress" },
             lualine_z = { { "location", icon = "" } },
          },

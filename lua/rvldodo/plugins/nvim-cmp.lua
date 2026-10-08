@@ -31,12 +31,13 @@ return {
       -- set (statelessW, statefulW, initS, build, …).
       luasnip.filetype_extend("dart", { "flutter" })
 
-      -- Own Lua snippets live in <config>/snippets/<ft>.lua. NestJS ones are
-      -- registered under a `nestjs` pseudo-filetype (same trick as flutter
+      -- Own Lua snippets live in <config>/snippets/<ft>.lua. NestJS / Express ones are
+      -- registered under `nestjs` / `express` pseudo-filetypes (same trick as flutter
       -- above) so they stay in one file and can be pulled into any ft.
       -- Eager `load`, not `lazy_load`: this runs on InsertEnter, after the
       -- buffer's FileType already fired, so the lazy variant would miss it.
-      luasnip.filetype_extend("typescript", { "nestjs" })
+      luasnip.filetype_extend("typescript", { "nestjs", "express" })
+      luasnip.filetype_extend("javascript", { "express" })
       require("luasnip.loaders.from_lua").load({ paths = { vim.fn.stdpath("config") .. "/snippets" } })
 
       -- Source-name label shown after the kind icon in the completion menu.

@@ -1,10 +1,11 @@
--- NestJS / TypeScript backend tooling: test runner (jest or vitest),
+-- NestJS / Express / TypeScript backend tooling: test runner (jest, vitest
+-- or mocha),
 -- project-wide typecheck, package.json version hints. LSP lives in
 -- lsp/lspconfig.lua (ts_ls + eslint/oxlint), formatting + lint-fix in
 -- formatting.lua, DAP in debugger.lua, snippets in <config>/snippets/nestjs.lua,
 -- `nest g` in core/nestjs.lua, project detection in core/typescript.lua.
 return {
-   -- ── test runner (jest / vitest) ─────────────────────────────────────
+   -- ── test runner (jest / vitest / mocha) ─────────────────────────────
    -- Extends the neotest spec from plugins/python.lua; the <leader>t*
    -- keymaps are defined there and work for every adapter.
    --
@@ -17,6 +18,7 @@ return {
       dependencies = {
          "nvim-neotest/neotest-jest",
          "marilari88/neotest-vitest",
+         "adrigzr/neotest-mocha", -- Express projects on mocha + chai + supertest
       },
       opts = function(_, opts)
          local ts = require("rvldodo.core.typescript")
@@ -80,9 +82,20 @@ return {
             end,
          })
 
+         local mocha = require("neotest-mocha")({
+            command = function(file)
+               return ts.local_bin("mocha", file) or "npx mocha"
+            end,
+            env = { CI = "true" },
+            cwd = function(file)
+               return ts.project_root(file)
+            end,
+         })
+
          opts.adapters = opts.adapters or {}
          table.insert(opts.adapters, gate(jest, "jest"))
          table.insert(opts.adapters, gate(vitest, "vitest"))
+         table.insert(opts.adapters, gate(mocha, "mocha"))
       end,
    },
 
