@@ -28,9 +28,9 @@
 
 -- Run `query` on the current connection without touching the result UI and
 -- call `cb` with the rows decoded from JSON (list of { column = value }).
-local function query_rows(query, cb)
+local function query_rows(query, cb, conn_id)
    local core = require("dbee").api.core
-   local conn = core.get_current_connection()
+   local conn = conn_id and { id = conn_id } or core.get_current_connection()
    if not conn then
       return vim.notify("dbee: no connection selected", vim.log.levels.ERROR)
    end
@@ -66,28 +66,60 @@ local function open_sql_buffer(name, text)
    vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(text, "\r?\n"))
 end
 
-local function edit_procedure()
+-- Open a procedure's source as CREATE OR ALTER in a sql buffer.
+local function open_procedure(name, conn_id)
+   query_rows(
+      ("SELECT OBJECT_DEFINITION(OBJECT_ID('%s')) AS def"):format((name:gsub("'", "''"))),
+      function(def_rows)
+         local def = def_rows[1] and def_rows[1].def
+         if type(def) ~= "string" then
+            return vim.notify("dbee: no definition for " .. name .. " (encrypted or no permission?)", vim.log.levels.WARN)
+         end
+         -- Turn the stored CREATE into CREATE OR ALTER so running it updates in place.
+         def = def:gsub("^(%s*)[Cc][Rr][Ee][Aa][Tt][Ee]%s+[Pp][Rr][Oo][Cc]", "%1CREATE OR ALTER PROC", 1)
+         open_sql_buffer(name .. ".sql", def)
+      end,
+      conn_id
+   )
+end
+
+local function edit_procedure(conn_id)
    query_rows([[
 SELECT s.name + '.' + p.name AS name
 FROM sys.procedures p JOIN sys.schemas s ON s.schema_id = p.schema_id
 ORDER BY s.name, p.name]], function(rows)
       local names = vim.tbl_map(function(r) return r.name end, rows)
-      vim.ui.select(names, { prompt = "Stored procedure" }, function(name)
-         if not name then return end
-         query_rows(
-            ("SELECT OBJECT_DEFINITION(OBJECT_ID('%s')) AS def"):format(name:gsub("'", "''")),
-            function(def_rows)
-               local def = def_rows[1] and def_rows[1].def
-               if type(def) ~= "string" then
-                  return vim.notify("dbee: no definition for " .. name .. " (encrypted or no permission?)", vim.log.levels.WARN)
-               end
-               -- Turn the stored CREATE into CREATE OR ALTER so running it updates in place.
-               def = def:gsub("^(%s*)[Cc][Rr][Ee][Aa][Tt][Ee]%s+[Pp][Rr][Oo][Cc]", "%1CREATE OR ALTER PROC", 1)
-               open_sql_buffer(name .. ".sql", def)
-            end
-         )
-      end)
-   end)
+      -- Telescope instead of vim.ui.select: scrolls and filters as you type.
+      local pickers = require("telescope.pickers")
+      local finders = require("telescope.finders")
+      local conf = require("telescope.config").values
+      local actions = require("telescope.actions")
+      local action_state = require("telescope.actions.state")
+      pickers.new({}, {
+         prompt_title = ("Stored procedures (%d)"):format(#names),
+         finder = finders.new_table({ results = names }),
+         sorter = conf.generic_sorter({}),
+         attach_mappings = function(bufnr)
+            actions.select_default:replace(function()
+               local entry = action_state.get_selected_entry()
+               actions.close(bufnr)
+               if entry then open_procedure(entry[1], conn_id) end
+            end)
+            return true
+         end,
+      }):find()
+   end, conn_id)
+end
+
+-- Drawer node "stored procedures" for a SQL Server connection: <CR> opens the
+-- searchable procedure popup (same as <leader>qp) for that connection.
+local function procedures_node(conn_id)
+   return require("nui.tree").Node({
+      id = conn_id .. "__stored_procedures__",
+      name = "stored procedures",
+      type = "schema",
+      action_1 = function() edit_procedure(conn_id) end,
+   })
 end
 
 local function new_procedure()
@@ -148,7 +180,7 @@ return {
             desc = "DB: run whole buffer",
          },
          { "<leader>qh", function() require("rvldodo.dbee.cheatsheets").pick() end, desc = "DB: command cheatsheets" },
-         { "<leader>qp", edit_procedure, desc = "DB: edit stored procedure (SQL Server)" },
+         { "<leader>qp", function() edit_procedure() end, desc = "DB: edit stored procedure (SQL Server)" },
          { "<leader>qP", new_procedure, desc = "DB: new stored procedure (SQL Server)" },
          { "<leader>qc", function() require("dbee").store("csv", "file", { extra_arg = vim.fn.input("CSV path: ", "", "file") }) end, desc = "DB: export result to CSV" },
          { "<leader>qj", function() require("dbee").store("json", "yank", {}) end, desc = "DB: yank result as JSON" },
@@ -308,6 +340,14 @@ return {
                   local db = node.type == "connection" and types[node.id]
                   if db and candies["conn_" .. db] then
                      node.type = "conn_" .. db
+                  end
+                  if db == "sqlserver" and node.lazy_children then
+                     local lazy = node.lazy_children
+                     node.lazy_children = function()
+                        local children = lazy()
+                        table.insert(children, 1, procedures_node(node.id))
+                        return children
+                     end
                   end
                end
             end
